@@ -1,0 +1,33 @@
+name: Deploy to Google App Engine
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+
+    - name: Configurar Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.22' 
+
+    - name: Autenticar no Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Configurar Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+
+    - name: Deploy para App Engine
+      run: |
+        gcloud app deploy app.yaml --quiet
+      env:
+        PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
