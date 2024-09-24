@@ -120,9 +120,9 @@ func (m model) footerView() string {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var homeContent = homePage()
-	var sobreContent = sobrePage()
-	var contatoContent = contatoPage()
+	// var homeContent = homePage()
+	// var sobreContent = sobrePage()
+	// var contatoContent = contatoPage()
 	// Navigation.
 	var cmd tea.Cmd
 	switch msg := msg.(type) {

@@ -11,6 +11,6 @@ FROM scratch AS prod
 
 WORKDIR /
 COPY --from=build /source/cris_term /
-COPY --from=build /source/content/ /content/
+# COPY --from=build /source/content/ /content/
 EXPOSE 42069
 CMD ["/cris_term"]
