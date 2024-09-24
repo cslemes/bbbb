@@ -1,6 +1,6 @@
 module github.com/cslemes/cris_term
 
-go 1.23.1
+go 1.22
 
 require (
 	github.com/charmbracelet/bubbles v0.20.0
