@@ -22,7 +22,7 @@ import (
 
 const (
 	host = "localhost"
-	port = 1000
+	port = 42069
 )
 
 // You can wire any Bubble Tea model up to the middleware with a function that
