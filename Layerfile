@@ -21,4 +21,6 @@ RUN go build -o cris_term cmd/ssh/*
 # Whenever someone clicks the link, we'll load this staging server and forward
 # their requests to it.
 RUN BACKGROUND ./cris_term
+EXPOSE WEBSITE localhost:22 /ssh
+EXPOSE WEBSITE localhost:42069 /
 # EXPOSE WEBSITE localhost:42069
