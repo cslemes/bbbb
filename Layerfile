@@ -22,4 +22,4 @@ RUN go build -o cris_term cmd/ssh/*
 # their requests to it.
 RUN BACKGROUND ./cris_term
 # EXPOSE WEBSITE localhost:22 /ssh
-EXPOSE 42069
+# EXPOSE 42069
