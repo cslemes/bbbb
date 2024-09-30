@@ -48,12 +48,13 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 func main() {
 	s, err := wish.NewServer(
 		wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
-		//	wish.WithHostKeyPath("ssh/term_info_ed25519"),
-		//		wish.WithPublicKeyAuth(func(_ ssh.Context, key ssh.PublicKey) bool {
+		wish.WithHostKeyPath(".ssh/term_info_ed25519"),
+
+		wish.WithPublicKeyAuth(func(_ ssh.Context, key ssh.PublicKey) bool {
 		// needed for the public key on the ssh.Session, else it just
 		// returns 0s
-		//			return true
-		//		}),
+					return true
+				}),
 		wish.WithMiddleware(
 			bm.Middleware(teaHandler),
 			activeterm.Middleware(),
