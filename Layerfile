@@ -13,13 +13,12 @@ RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
 
 # build app
 COPY . .
-RUN go mod tidy
-RUN go build -o cris_term cmd/ssh/*
+RUN go mod download
+RUN CGO_ENABLED=0 go build -o /source/cris_term cmd/ssh/*
 
 
 # Expose the webserver in the staging server as a secure link.
 # Whenever someone clicks the link, we'll load this staging server and forward
 # their requests to it.
 RUN BACKGROUND ./cris_term
-# EXPOSE WEBSITE localhost:22 /ssh
-# EXPOSE 42069
+EXPOSE WEBSITE localhost:42069
