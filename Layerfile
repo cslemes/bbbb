@@ -14,7 +14,7 @@ RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
 # build app
 COPY . .
 RUN go mod download
-RUN CGO_ENABLED=0 go build -o /source/cris_term cmd/ssh/*
+RUN CGO_ENABLED=0 go build -o /cris_term cmd/ssh/*
 
 
 # Expose the webserver in the staging server as a secure link.

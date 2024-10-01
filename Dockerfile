@@ -14,6 +14,6 @@ COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /source/cris_term /
 
 
-COPY --from=build /source/content/ /content/
+# COPY --from=build /source/content/ /content/
 EXPOSE 42069
 CMD ["/source/cris_term"]
