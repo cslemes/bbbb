@@ -20,7 +20,7 @@ COPY / /root
 # TODO: log in to docker hub to avoid rate limits
 # See https://webapp.io/docs/advanced-workflows#logging-in-to-docker to learn how to log in to docker
 
-RUN REPEATABLE echo "replace this line with your image build command" && docker build -t image build-dir
+RUN REPEATABLE echo "replace this line with your image build command" && docker build -t sshblog .
 
 # systemctl restart k3s is required here because tokens expire when things are hibernated
 RUN systemctl restart k3s && echo "replace this line with your kubectl deploy command" && k3s kubectl apply -f deploy.yaml

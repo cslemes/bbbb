@@ -18,6 +18,7 @@ spec:
       containers:
       - image: sshblog
         name: sshblog
+        imagePullPolicy: Never
         ports:
         - containerPort: 42069
 ---
