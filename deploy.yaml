@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sshblog
+  name: sshblog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sshblog
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: sshblog
+    spec:
+      containers:
+      - image: sshblog
+        name: sshblog
+        ports:
+        - containerPort: 42069
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sshblog-service
+spec:
+  selector:
+    app: sshblog
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 42069
+  type: ClusterIP
