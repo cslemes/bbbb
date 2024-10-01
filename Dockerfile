@@ -4,7 +4,7 @@ WORKDIR /source
 COPY . .
 
 RUN go mod download
-RUN  go build -o /source/sshblog cmd/ssh/*
+RUN go build -o /source/sshblog cmd/ssh/*
 
 
 FROM scratch AS prod
@@ -16,4 +16,4 @@ COPY --from=build /source/sshblog /
 
 # COPY --from=build /source/content/ /content/
 EXPOSE 42069
-CMD ["/source/sshblog"]
+CMD ["/sshblog"]
