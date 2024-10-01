@@ -23,10 +23,11 @@ COPY / /root
 RUN REPEATABLE echo "replace this line with your image build command" && docker build -t sshblog .
 
 # systemctl restart k3s is required here because tokens expire when things are hibernated
-RUN systemctl restart k3s && echo "replace this line with your kubectl deploy command" && k3s kubectl apply -f deploy.yaml
-
+RUN systemctl restart k3s 
+RUN k3s kubectl apply -f deploy.yaml
+RUN kubectl wait --for=condition=Ready pod/sshblog
 # k3s comes with an ingress controller listening on port 443 already
 # you could disable it and use "kubectl port-forward --address 0.0.0.0 svc/my-service 443:443" otherwise
 # (change options of k3s install to  --docker --disable traefik to disable the default ingress controller)
-RUN REPEATABLE kubectl port-forward --address 0.0.0.0 svc/sshblog-service 80:80
+RUN kubectl port-forward --address 0.0.0.0 svc/sshblog-service 80:80
 EXPOSE WEBSITE localhost:80
