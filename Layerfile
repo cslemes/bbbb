@@ -25,7 +25,7 @@ RUN REPEATABLE echo "replace this line with your image build command" && docker 
 # systemctl restart k3s is required here because tokens expire when things are hibernated
 RUN systemctl restart k3s 
 RUN k3s kubectl apply -f deploy.yaml
-
+RUN sleep 30
 RUN kubectl wait --for=condition=ready pod -l app=sshblog
 # k3s comes with an ingress controller listening on port 443 already
 # you could disable it and use "kubectl port-forward --address 0.0.0.0 svc/my-service 443:443" otherwise
