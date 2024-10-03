@@ -3,14 +3,12 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/keygen"
 	"github.com/charmbracelet/log"
 	"github.com/charmbracelet/ssh"
 	"github.com/charmbracelet/wish"
@@ -19,12 +17,15 @@ import (
 	"github.com/charmbracelet/wish/logging"
 	resume "github.com/cslemes/cris_term/cmd/app"
 	_ "github.com/joho/godotenv/autoload"
+
+	"tailscale.com/tsnet"
+	"tailscale.com/types/logger"
 )
 
-const (
-	host = "localhost"
-	port = 42069
-)
+// const (
+// 	host = "localhost"
+// 	port = 42069
+// )
 
 // You can wire any Bubble Tea model up to the middleware with a function that
 // handles the incoming ssh.Session. Here we just grab the terminal info and
@@ -48,25 +49,36 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 
 func main() {
 
-	k, err := keygen.New(".ssh/server_ed25519", keygen.WithKeyType(keygen.Ed25519))
+	srv := &tsnet.Server{
+		Hostname: "ssh-blog",
+		AuthKey:  os.Getenv("TSKEY"),
+		Logf:     logger.Discard,
+	}
+
+	defer srv.Close()
+
+	if err := srv.Start(); err != nil {
+		log.Fatalf("Failed to start Tailscale server: %v", err)
+	}
+
+	ln, err := srv.Listen("tcp", ":2222")
 	if err != nil {
-		return // fmt.Errorf("could not create keypair: %w", err)
+		log.Fatalf("Failed to listen: %v", err)
 	}
-	if !k.KeyPairExists() {
-		if err := k.WriteKeys(); err != nil {
-			return // fmt.Errorf("could not write key pair: %w", err)
-		}
-	}
+	defer ln.Close()
+
+	// -----
 
 	s, err := wish.NewServer(
-		wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
+		wish.WithAddress(ln.Addr().String()),
+		// wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
 		wish.WithHostKeyPath(".ssh/term_info_ed25519"),
 
-		wish.WithPublicKeyAuth(func(_ ssh.Context, key ssh.PublicKey) bool {
-			// needed for the public key on the ssh.Session, else it just
-			// returns 0s
-			return true
-		}),
+		// wish.WithPublicKeyAuth(func(_ ssh.Context, key ssh.PublicKey) bool {
+		// 	// needed for the public key on the ssh.Session, else it just
+		// 	// returns 0s
+		// 	return true
+		// }),
 		wish.WithMiddleware(
 			bm.Middleware(teaHandler),
 			activeterm.Middleware(),
@@ -79,7 +91,8 @@ func main() {
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-	log.Info("Starting SSH server", "host", host, "port", port)
+	log.Info("Starting SSH server")
+	//log.Info("Starting SSH server", "host", host, "port", port)
 	go func() {
 		if err = s.ListenAndServe(); err != nil && !errors.Is(err, ssh.ErrServerClosed) {
 			log.Error("could not start server", "error", err)
