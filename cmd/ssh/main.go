@@ -10,6 +10,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/keygen"
 	"github.com/charmbracelet/log"
 	"github.com/charmbracelet/ssh"
 	"github.com/charmbracelet/wish"
@@ -46,15 +47,26 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 }
 
 func main() {
+
+	k, err := keygen.New(".ssh/server_ed25519", keygen.WithKeyType(keygen.Ed25519))
+	if err != nil {
+		return // fmt.Errorf("could not create keypair: %w", err)
+	}
+	if !k.KeyPairExists() {
+		if err := k.WriteKeys(); err != nil {
+			return // fmt.Errorf("could not write key pair: %w", err)
+		}
+	}
+
 	s, err := wish.NewServer(
 		wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
 		wish.WithHostKeyPath(".ssh/term_info_ed25519"),
 
 		wish.WithPublicKeyAuth(func(_ ssh.Context, key ssh.PublicKey) bool {
-		// needed for the public key on the ssh.Session, else it just
-		// returns 0s
-					return true
-				}),
+			// needed for the public key on the ssh.Session, else it just
+			// returns 0s
+			return true
+		}),
 		wish.WithMiddleware(
 			bm.Middleware(teaHandler),
 			activeterm.Middleware(),

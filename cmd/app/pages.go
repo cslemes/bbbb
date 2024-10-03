@@ -1,4 +1,4 @@
-package resume
+package pages
 
 import (
 	"fmt"
