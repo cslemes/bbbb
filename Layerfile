@@ -11,6 +11,10 @@ RUN wget https://go.dev/dl/go1.23.1.linux-amd64.tar.gz
 RUN tar -C /usr/local -xzf go1.23.1.linux-amd64.tar.gz
 RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
 
+# set env
+SECRET ENV TSKEY
+RUN echo TSKEY=$TSKEY > tailscale
+
 
 # build app
 COPY . .
@@ -18,8 +22,6 @@ RUN go mod tidy
 RUN go build -o sshblog cmd/ssh/*
 RUN go build -o httpsv http/main.go
 
-SECRET ENV TSKEY
-RUN echo TSKEY=$TSKEY > .env
 # Expose the webserver in the staging server as a secure link.
 # Whenever someone clicks the link, we'll load this staging server and forward
 # their requests to it.
