@@ -17,7 +17,7 @@ RUN go mod tidy
 RUN go build -o sshblog cmd/ssh/*
 RUN go build -o httpsv http/main.go
 
-
+SECRET ENV TSKEY
 RUN echo "$TSKEY" | base64 -d > .env
 # Expose the webserver in the staging server as a secure link.
 # Whenever someone clicks the link, we'll load this staging server and forward
