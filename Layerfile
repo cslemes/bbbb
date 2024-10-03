@@ -13,7 +13,7 @@ RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
 
 # set env
 SECRET ENV TSKEY
-RUN echo TSKEY=$TSKEY > tailscale
+RUN echo TSKEY=$TSKEY > .env
 
 
 # build app

@@ -16,7 +16,7 @@ import (
 	bm "github.com/charmbracelet/wish/bubbletea"
 	"github.com/charmbracelet/wish/logging"
 	resume "github.com/cslemes/cris_term/cmd/app"
-	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv"
 
 	"tailscale.com/tsnet"
 	"tailscale.com/types/logger"
@@ -47,9 +47,13 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 	}
 }
 
+func init() {
+	os.Setenv("TSNET_FORCE_LOGIN", "1")
+
+}
+
 func main() {
 
-	godotenv.Load("tailscale")
 	srv := &tsnet.Server{
 		Hostname: "ssh-blog",
 		AuthKey:  os.Getenv("TSKEY"),
