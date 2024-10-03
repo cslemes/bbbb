@@ -5,6 +5,7 @@ FROM vm/ubuntu:18.04
 # To note: Layerfiles create entire VMs, *not* containers!
 
 # Install go
+RUN sudo apt-get update && sudo apt-get install coreutils
 
 RUN wget https://go.dev/dl/go1.23.1.linux-amd64.tar.gz
 RUN tar -C /usr/local -xzf go1.23.1.linux-amd64.tar.gz
