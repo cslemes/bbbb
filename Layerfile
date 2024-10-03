@@ -5,7 +5,7 @@ FROM vm/ubuntu:18.04
 # To note: Layerfiles create entire VMs, *not* containers!
 
 # Install go
-## RUN apt-get update && apt-get install tar
+
 RUN wget https://go.dev/dl/go1.23.1.linux-amd64.tar.gz
 RUN tar -C /usr/local -xzf go1.23.1.linux-amd64.tar.gz
 RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
@@ -14,13 +14,14 @@ RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
 # build app
 COPY . .
 RUN go mod tidy
-RUN go build -o /sshblog cmd/ssh/*
-RUN go build -o /httpsv http/main.go
+RUN go build -o sshblog cmd/ssh/*
+# RUN go build -o httpsv http/main.go
 
 
 # Expose the webserver in the staging server as a secure link.
 # Whenever someone clicks the link, we'll load this staging server and forward
 # their requests to it.
+
 RUN BACKGROUND ./sshblog
-RUN BACKGROUND ./httpsv
-EXPOSE WEBSITE localhost:80
+# RUN BACKGROUND ./httpsv
+EXPOSE WEBSITE tcp://localhost:42069
