@@ -5,7 +5,7 @@ FROM vm/ubuntu:18.04
 # To note: Layerfiles create entire VMs, *not* containers!
 
 # Install go
-RUN sudo apt-get update && sudo apt-get install coreutils
+# RUN sudo apt-get update && sudo apt-get install coreutils
 
 RUN wget https://go.dev/dl/go1.23.1.linux-amd64.tar.gz
 RUN tar -C /usr/local -xzf go1.23.1.linux-amd64.tar.gz
@@ -19,7 +19,7 @@ RUN go build -o sshblog cmd/ssh/*
 RUN go build -o httpsv http/main.go
 
 SECRET ENV TSKEY
-RUN echo "$TSKEY" | base64 -d > .env
+RUN echo TSKEY=$TSKEY > .env
 # Expose the webserver in the staging server as a secure link.
 # Whenever someone clicks the link, we'll load this staging server and forward
 # their requests to it.
