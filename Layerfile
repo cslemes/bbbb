@@ -12,8 +12,8 @@ RUN tar -C /usr/local -xzf go1.23.1.linux-amd64.tar.gz
 RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
 
 # set env
-SECRET ENV TSKEY
-RUN echo TSKEY=$TSKEY > .env
+SECRET ENV TS_AUTHKEY
+RUN echo TS_AUTHKEY=$TS_AUTHKEY > .env
 
 
 # build app
