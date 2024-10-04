@@ -47,16 +47,16 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 	}
 }
 
-func init() {
-	os.Setenv("TSNET_FORCE_LOGIN", "1")
+// func init() {
+// 	os.Setenv("TSNET_FORCE_LOGIN", "1")
 
-}
+// }
 
 func main() {
 
 	srv := &tsnet.Server{
 		Hostname: "ssh-blog",
-		AuthKey:  os.Getenv("TSKEY"),
+		AuthKey:  os.Getenv("TS_AUTHKEY"),
 		Logf:     logger.Discard,
 	}
 
