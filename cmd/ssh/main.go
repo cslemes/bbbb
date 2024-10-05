@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -17,15 +18,12 @@ import (
 	"github.com/charmbracelet/wish/logging"
 	resume "github.com/cslemes/cris_term/cmd/app"
 	_ "github.com/joho/godotenv"
-
-	"tailscale.com/tsnet"
-	"tailscale.com/types/logger"
 )
 
-// const (
-// 	host = "localhost"
-// 	port = 42069
-// )
+const (
+	host = "localhost"
+	port = 42069
+)
 
 // You can wire any Bubble Tea model up to the middleware with a function that
 // handles the incoming ssh.Session. Here we just grab the terminal info and
@@ -47,36 +45,35 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 	}
 }
 
-// func init() {
-// 	os.Setenv("TSNET_FORCE_LOGIN", "1")
-
-// }
-
 func main() {
+	// godotenv.Load(".env")
 
-	srv := &tsnet.Server{
-		Hostname: "ssh-blog",
-		AuthKey:  os.Getenv("TS_AUTHKEY"),
-		Logf:     logger.Discard,
-	}
+	// os.Setenv("TSNET_FORCE_LOGIN", "1")
+	// key := os.Getenv("TS_AUTHKEY")
 
-	defer srv.Close()
+	// srv := &tsnet.Server{
+	// 	Hostname: "ssh-blog",
+	// 	AuthKey:  key,
+	// 	Logf:     logger.Discard,
+	// }
 
-	if err := srv.Start(); err != nil {
-		log.Fatalf("Failed to start Tailscale server: %v", err)
-	}
+	// defer srv.Close()
 
-	ln, err := srv.Listen("tcp", ":2222")
-	if err != nil {
-		log.Fatalf("Failed to listen: %v", err)
-	}
-	defer ln.Close()
+	// if err := srv.Start(); err != nil {
+	// 	log.Fatalf("Failed to start Tailscale server: %v", err)
+	// }
+
+	// ln, err := srv.Listen("tcp", ":2222")
+	// if err != nil {
+	// 	log.Fatalf("Failed to listen: %v", err)
+	// }
+	// defer ln.Close()
 
 	// -----
 
 	s, err := wish.NewServer(
-		wish.WithAddress(ln.Addr().String()),
-		// wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
+		// wish.WithAddress(ln.Addr().String()),
+		wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
 		wish.WithHostKeyPath(".ssh/term_info_ed25519"),
 
 		// wish.WithPublicKeyAuth(func(_ ssh.Context, key ssh.PublicKey) bool {
