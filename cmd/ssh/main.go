@@ -93,7 +93,8 @@ func main() {
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-	log.Info("Starting SSH server")
+	log.Info("Starting SSH server", s.Addr)
+
 	//log.Info("Starting SSH server", "host", host, "port", port)
 	go func() {
 		if err = s.ListenAndServe(); err != nil && !errors.Is(err, ssh.ErrServerClosed) {
