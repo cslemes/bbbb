@@ -20,7 +20,7 @@ RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
 COPY . .
 RUN go mod tidy
 RUN go build -o sshblog cmd/ssh/*
-# RUN go build -o httpsv http/main.go
+RUN go build -o httpsv http/main.go
 
 # Expose the webserver in the staging server as a secure link.
 # Whenever someone clicks the link, we'll load this staging server and forward
@@ -29,5 +29,5 @@ RUN sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 4
 
 RUN BACKGROUND ./sshblog
 # RUN Http server to bypass webapp port check
-# RUN BACKGROUND ./httpsv
+ RUN BACKGROUND ./httpsv
 EXPOSE WEBSITE localhost:80
