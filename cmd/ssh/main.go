@@ -81,11 +81,6 @@ func main() {
 		// 	// returns 0s
 		// 	return true
 		// }),
-
-		wish.WithPublicKeyAuth(func(ctx ssh.Context, key ssh.PublicKey) bool {
-			// Allow anyone to connect
-			return true
-		}),
 		wish.WithMiddleware(
 			bm.Middleware(teaHandler),
 			activeterm.Middleware(),
