@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	host = "localhost"
+	host = "0.0.0.0"
 	port = 42069
 )
 
@@ -46,30 +46,6 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 }
 
 func main() {
-	// godotenv.Load(".env")
-
-	// os.Setenv("TSNET_FORCE_LOGIN", "1")
-	// key := os.Getenv("TS_AUTHKEY")
-
-	// srv := &tsnet.Server{
-	// 	Hostname: "ssh-blog",
-	// 	AuthKey:  key,
-	// 	Logf:     logger.Discard,
-	// }
-
-	// defer srv.Close()
-
-	// if err := srv.Start(); err != nil {
-	// 	log.Fatalf("Failed to start Tailscale server: %v", err)
-	// }
-
-	// ln, err := srv.Listen("tcp", ":2222")
-	// if err != nil {
-	// 	log.Fatalf("Failed to listen: %v", err)
-	// }
-	// defer ln.Close()
-
-	// -----
 
 	s, err := wish.NewServer(
 		// wish.WithAddress(ln.Addr().String()),
