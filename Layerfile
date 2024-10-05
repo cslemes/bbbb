@@ -25,11 +25,11 @@ RUN go build -o httpsv http/main.go
 # Expose the webserver in the staging server as a secure link.
 # Whenever someone clicks the link, we'll load this staging server and forward
 # their requests to it.
-RUN systemctl stop sshd
+# RUN systemctl stop sshd
 
 RUN BACKGROUND ./sshblog
 # RUN Http server to bypass webapp port check
 RUN BACKGROUND ./httpsv
 EXPOSE WEBSITE localhost:80
 
-RUN sudo iptables -t nat -A PREROUTING -p tcp --dport 22 -j REDIRECT --to-port 42069
+RUN sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 42069
