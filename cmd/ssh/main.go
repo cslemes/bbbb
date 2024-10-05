@@ -76,11 +76,11 @@ func main() {
 		wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
 		wish.WithHostKeyPath(".ssh/term_info_ed25519"),
 
-		// wish.WithPublicKeyAuth(func(_ ssh.Context, key ssh.PublicKey) bool {
-		// 	// needed for the public key on the ssh.Session, else it just
-		// 	// returns 0s
-		// 	return true
-		// }),
+		wish.WithPublicKeyAuth(func(_ ssh.Context, key ssh.PublicKey) bool {
+			// needed for the public key on the ssh.Session, else it just
+			// returns 0s
+			return true
+		}),
 		wish.WithMiddleware(
 			bm.Middleware(teaHandler),
 			activeterm.Middleware(),
