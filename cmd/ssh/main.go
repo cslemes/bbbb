@@ -76,9 +76,9 @@ func main() {
 		wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
 		wish.WithHostKeyPath(".ssh/term_info_ed25519"),
 
-		wish.WithPublicKeyAuth(func(_ ssh.Context, key ssh.PublicKey) bool {
-			// needed for the public key on the ssh.Session, else it just
-			// returns 0s
+		wish.WithPublicKeyAuth(func(ctx ssh.Context, key ssh.PublicKey) bool {
+			log.Info("Attempting to authenticate with public key", "user", ctx.User(), "key", key.Type())
+			// Accept any public key, regardless of its content.
 			return true
 		}),
 		wish.WithMiddleware(
