@@ -9,7 +9,7 @@ FROM vm/ubuntu:18.04
 
 RUN wget https://go.dev/dl/go1.23.1.linux-amd64.tar.gz
 RUN tar -C /usr/local -xzf go1.23.1.linux-amd64.tar.gz
-RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
+# RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
 
 # set env
 # SECRET ENV TS_AUTHKEY
@@ -20,17 +20,16 @@ RUN ln -s /usr/local/go/bin/go /usr/local/bin/go
 COPY . .
 RUN go mod tidy
 RUN go build -o sshblog cmd/ssh/*
-# RUN go build -o httpsv http/main.go
+RUN go build -o httpsv http/main.go
 
 # Expose the webserver in the staging server as a secure link.
 # Whenever someone clicks the link, we'll load this staging server and forward
 # their requests to it.
-RUN systemctl stop sshd
+# RUN systemctl stop sshd
 
 RUN BACKGROUND ./sshblog
 # RUN Http server to bypass webapp port check
-# RUN BACKGROUND ./httpsv
-# EXPOSE WEBSITE localhost:80
-EXPOSE 42069
+RUN BACKGROUND ./httpsv
+EXPOSE WEBSITE localhost:80
 
-RUN sudo iptables -t nat -A PREROUTING -p tcp --dport 22 -j REDIRECT --to-port 42069
+RUN sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 42069
