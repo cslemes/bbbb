@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"context"
@@ -16,41 +16,24 @@ import (
 	"github.com/charmbracelet/wish/activeterm"
 	bm "github.com/charmbracelet/wish/bubbletea"
 	"github.com/charmbracelet/wish/logging"
-	resume "github.com/cslemes/cris_term/cmd/app"
-)
-
-const (
-	host = "0.0.0.0"
-	port = 42069
+	content "github.com/cslemes/bbbb/cmd/app"
+	"github.com/cslemes/bbbb/cmd/config"
 )
 
 func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
-	// pty, _, active := s.Pty()
-	// if !active {
-	// 	wish.Fatalln(s, "no active terminal, skipping")
-	// 	return nil, nil
-	// }
-	m := resume.InitialModel()
-
-	return m, []tea.ProgramOption{
-		tea.WithAltScreen(),
-
-		//		tea.WithInput(pty.Slave),
-		//		tea.WithOutput(pty.Slave),
-	}
+	m := content.InitialModel()
+	return m, []tea.ProgramOption{tea.WithAltScreen()}
 }
 
-func main() {
+func StartServer() {
+	Config := config.AppConfig()
+
+	host := Config.Server.Host
+	port := Config.Server.Port
 
 	s, err := wish.NewServer(
 		wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
 		wish.WithHostKeyPath(".ssh/term_info_ed25519"),
-
-		// wish.WithPublicKeyAuth(func(ctx ssh.Context, key ssh.PublicKey) bool {
-		// 	log.Info("Attempting to authenticate with public key", "user", ctx.User(), "key", key.Type())
-		// 	// Accept any public key, regardless of its content.
-		// 	return true
-		// }),
 		wish.WithMiddleware(
 			bm.Middleware(teaHandler),
 			activeterm.Middleware(),

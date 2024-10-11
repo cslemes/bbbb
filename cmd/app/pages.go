@@ -9,88 +9,61 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
-)
-
-// Style definitions.
-var (
-	headerStyle = lipgloss.NewStyle().
-		//			BorderStyle(lipgloss.NormalBorder()).
-		//BorderForeground(lipgloss.Color("#874BFD")).
-		Padding(0, 1)
-
-	activeTabStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#FFFFFF")).
-			Background(lipgloss.Color("#874BFD")).
-			Padding(0, 1)
-
-	inactiveTabStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.Color("#888888")).
-				Padding(0, 1)
-
-	splashStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#FAFAFA")).
-		//			Background(lipgloss.Color("#874BFD")).
-		// BorderStyle(lipgloss.DoubleBorder()).
-		// BorderForeground(lipgloss.Color("#FAFAFA")).
-		// Padding(1, 0).
-		Bold(true)
-
-	titleStyle = func() lipgloss.Style {
-		b := lipgloss.RoundedBorder()
-		b.Right = "├"
-		return lipgloss.NewStyle().BorderStyle(b).Padding(0, 1)
-	}()
-
-	infoStyle = func() lipgloss.Style {
-		b := lipgloss.RoundedBorder()
-		b.Left = "┤"
-		return titleStyle.BorderStyle(b)
-	}()
-
-	// Status Bar.
-
-	statusNugget = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#FFFDF5")).
-			Padding(0, 1)
-
-	statusBarStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.AdaptiveColor{Light: "#343433", Dark: "#C1C6B2"}).
-			Background(lipgloss.AdaptiveColor{Light: "#D9DCCF", Dark: "#353533"})
-
-	statusStyle = lipgloss.NewStyle().
-			Inherit(statusBarStyle).
-			Foreground(lipgloss.Color("#FFFDF5")).
-			Background(lipgloss.Color("#FF5F87")).
-			Padding(0, 1).
-			MarginRight(1)
-
-	// encodingStyle = statusNugget.
-	// 		Background(lipgloss.Color("#A550DF")).
-	// 		Align(lipgloss.Right)
-
-	statusText = lipgloss.NewStyle().Inherit(statusBarStyle)
-
-	fishCakeStyle = statusNugget.Background(lipgloss.Color("#6124DF"))
-
-	//spinnerStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
+	"github.com/cslemes/bbbb/cmd/utils"
 )
 
 type model struct {
-	showingSplash bool
-	currentView   int
-	viewports     []viewport.Model
-	viewport      viewport.Model
-	width         int
-	height        int
-	Ticks         int
-	ready         bool
+	showingSplash        bool
+	currentView          int
+	viewports            []viewport.Model
+	viewport             viewport.Model
+	width                int
+	height               int
+	Ticks                int
+	ready                bool
+	selectedItem         int
+	listItems            []string
+	selectedContent      viewport.Model
+	focusedOnList        bool
+	viewportHeight       int
+	verticalMarginHeight int
+	viewportWidth        int
+	blogPageOpen         bool
+	//
+	color               lipgloss.AdaptiveColor
+	activeSelectStyle   lipgloss.Style
+	inactiveSelectStyle lipgloss.Style
+	activeTabBorder     lipgloss.Border
+	tabBorder           lipgloss.Border
+	tab                 lipgloss.Style
+	tabGap              lipgloss.Style
+	activeTab           lipgloss.Style
+	splashStyle         lipgloss.Style
+	titleStyle          lipgloss.Style
+	infoStyle           lipgloss.Style
+	defaultStyle        lipgloss.Style
+	statusNugget        lipgloss.Style
+	statusStyle         lipgloss.Style
+	fishCakeStyle       lipgloss.Style
+	statusBarStyle      lipgloss.Style
+	statusText          lipgloss.Style
 }
 
 func InitialModel() model {
+
+	listItems, err := utils.LoadFilesFromDir("posts")
+	if err != nil {
+		fmt.Println("Error loading files from posts:", err)
+		listItems = []string{"Error loading files"}
+	}
+
 	return model{
-		showingSplash: true,
-		currentView:   0,
-		viewports:     make([]viewport.Model, 3),
+		showingSplash:   true,
+		currentView:     0,
+		viewports:       make([]viewport.Model, 5),
+		listItems:       listItems,
+		selectedContent: viewport.New(0, 0),
+		focusedOnList:   true,
 	}
 }
 
@@ -103,27 +76,65 @@ func tick() tea.Cmd {
 }
 
 func (m model) Init() tea.Cmd {
-
 	return tick()
 }
 
 func (m model) headerView() string {
-	title := titleStyle.Render("Mr. Pager")
-	line := strings.Repeat("─", max(0, m.viewport.Width-lipgloss.Width(title)))
-	return lipgloss.JoinHorizontal(lipgloss.Center, title, line)
+
+	tabs := []string{"p Principal", "s Sobre", "c Contato", "b Blog"}
+	renderedTabs := make([]string, len(tabs))
+
+	for i, menu := range tabs {
+		if i == m.currentView {
+			renderedTabs[i] = m.configTheme().activeTab.Render(menu)
+		} else {
+			renderedTabs[i] = m.configTheme().tab.Render(menu)
+		}
+	}
+	row := lipgloss.JoinHorizontal(lipgloss.Top, renderedTabs...)
+	gap := m.configTheme().tabGap.Render(strings.Repeat(" ", max(0, lipgloss.Width(row)-2)))
+
+	return lipgloss.JoinHorizontal(lipgloss.Bottom, row, gap)
+
 }
 
 func (m model) footerView() string {
-	info := infoStyle.Render(fmt.Sprintf("%3.f%%", m.viewport.ScrollPercent()*100))
-	line := strings.Repeat("─", max(0, m.viewport.Width-lipgloss.Width(info)))
-	return lipgloss.JoinHorizontal(lipgloss.Center, line, info)
+	w := lipgloss.Width
+
+	statusKey := m.configTheme().statusStyle.Render("RUNNING")
+	fishCake := m.configTheme().fishCakeStyle.Render("⚡ Cris.Run")
+	statusVal := m.configTheme().statusText.
+		Width(m.width - w(statusKey) - w(fishCake)).
+		Render("Pressione 'q' para sair.")
+
+	return m.statusBarStyle.Render(lipgloss.JoinHorizontal(lipgloss.Top,
+		statusKey,
+		statusVal,
+		fishCake,
+	))
+
+}
+
+func (m model) listView() string {
+
+	var listBuilder strings.Builder
+	for i, item := range m.listItems {
+		if i == m.selectedItem {
+			listBuilder.WriteString(m.configTheme().activeSelectStyle.Render("> " + item))
+		} else {
+			listBuilder.WriteString(m.configTheme().inactiveSelectStyle.Render("  " + item))
+		}
+		listBuilder.WriteString("\n")
+	}
+
+	//return listBuilder.String()
+	return lipgloss.NewStyle().
+		Render(listBuilder.String())
+
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	// var homeContent = homePage()
-	// var sobreContent = sobrePage()
-	// var contatoContent = contatoPage()
-	// Navigation.
+
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tickMsg:
@@ -136,9 +147,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if m.showingSplash {
 			return m, nil
 		}
-		switch strings.ToLower(msg.String()) {
-		case "ctrl+c", "q":
 
+		switch msg.String() {
+		case "ctrl+c", "q":
 			return m, tea.Quit
 		case "p":
 			m.currentView = 0
@@ -146,112 +157,157 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.currentView = 1
 		case "c":
 			m.currentView = 2
+		case "b":
+			if m.blogPageOpen || !m.focusedOnList {
+				m.currentView = 4
+			} else {
+				m.currentView = 3
+			}
 		case "right", "l":
-			m.currentView = (m.currentView + 1) % len(m.viewports)
+			m.currentView = (m.currentView + 1) % (len(m.viewports) - 1)
+
 		case "left", "h":
 			m.currentView = (m.currentView - 1 + len(m.viewports)) % len(m.viewports)
-		case "up", "down", "k", "j":
-			m.viewports[m.currentView], cmd = m.viewports[m.currentView].Update(msg)
-			return m, cmd
+
+		case "up", "k":
+			if m.currentView == 3 {
+				if m.focusedOnList {
+					if m.selectedItem > 0 {
+						m.selectedItem--
+					}
+				}
+			} else {
+				m.viewports[m.currentView], cmd = m.viewports[m.currentView].Update(msg)
+			}
+
+		case "down", "j":
+			if m.currentView == 3 {
+				if m.focusedOnList {
+					if m.selectedItem < len(m.listItems)-1 {
+						m.selectedItem++
+					}
+				}
+			} else {
+				m.viewports[m.currentView], cmd = m.viewports[m.currentView].Update(msg)
+			}
+
+		case "enter":
+			if m.currentView == 3 {
+				if m.focusedOnList {
+					filename := m.listItems[m.selectedItem]
+					content, err := utils.ReadFileContent("posts/" + filename + ".md")
+					if err != nil {
+						m.selectedContent.SetContent("Error reading file: " + err.Error())
+					} else {
+						renderedContent, _ := glamour.Render(content, "dark")
+						m.viewports[4] = viewport.New(m.width, m.viewportHeight)
+						m.viewports[4].Style = m.configTheme().defaultStyle
+						m.viewports[4].SetContent(renderedContent)
+						m.currentView = 4
+						m.focusedOnList = false
+						m.blogPageOpen = true
+					}
+				}
+			}
+		case "esc":
+			m.currentView = 3
+			m.focusedOnList = true
+
+			// case "up", "down", "k", "j":
+			// 	m.viewports[m.currentView], cmd = m.viewports[m.currentView].Update(msg)
+
 		}
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
-		//headerHeight := 3
-		//footerHeight := 1
 		headerHeight := lipgloss.Height(m.headerView())
 		footerHeight := lipgloss.Height(m.footerView())
 
-		viewportHeight := m.height - headerHeight - footerHeight
-		verticalMarginHeight := m.height + headerHeight + footerHeight
+		m.viewportHeight = m.height - headerHeight - footerHeight
+		m.verticalMarginHeight = m.height + headerHeight + footerHeight
+		m.viewportWidth = m.width
 
-		//if m.viewports[0].Height == 0 {
 		if !m.ready {
 
-			m.viewport = viewport.New(msg.Width, msg.Height-verticalMarginHeight)
+			m.viewport = viewport.New(msg.Width, msg.Height-m.verticalMarginHeight)
 			m.viewport.YPosition = headerHeight
-			//m.viewport.HighPerformanceRendering = useHighPerformanceRenderer
+			m.viewport.SetContent(m.navigation().View())
 
-			for i, content := range []string{homeContent, sobreContent, contatoContent} {
-				m.viewports[i] = viewport.New(m.width, viewportHeight)
-				m.viewports[i].Style = lipgloss.NewStyle().
-					Border(lipgloss.RoundedBorder()).
-					BorderForeground(lipgloss.Color("#874BFD"))
+			// 	// 	for i, content := range []string{homeContent, sobreContent, contatoContent} {
 
-				renderedContent, _ := glamour.Render(content, "dark")
-				m.viewports[i].SetContent(renderedContent)
-			}
+			// 	// 		m.viewports[i] = viewport.New(m.width, viewportHeight)
+			// 	// 		m.viewports[i].Style = defaultStyle
+
+			// 	// 		renderedContent, _ := glamour.Render(content, "dark")
+			// 	// 		m.viewports[i].SetContent(renderedContent)
+
+			// 	// 	}
+			// 	// 	m.viewports[3] = viewport.New(m.width, viewportHeight)
+			// 	// 	m.viewports[3].Style = defaultStyle
+			// 	// 	m.viewports[3].SetContent(m.listView())
+
 			m.ready = true
 		} else {
-			//for i := range m.viewports {
-			//m.viewports[i].Width = m.width
-			//m.viewports[i].Height = viewportHeight
 			m.viewport.Width = msg.Width
-			m.viewport.Height = msg.Height - verticalMarginHeight
-			//}
+			m.viewport.Height = msg.Height - m.verticalMarginHeight
 		}
 
 	}
-
-	return m, nil
+	//m.viewports[m.currentView], cmd = m.viewports[m.currentView].Update(msg)
+	return m, cmd
 }
 
 func (m model) View() string {
-	splashContent := "CRISTIANO LEMES"
+
+	splashContent := splashContent()
 
 	if m.showingSplash {
-
 		splashText := fmt.Sprintf("%s", splashContent)
-		style := splashStyle
+		style := m.splashStyle
 		return style.Render(lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, splashText))
 	}
 
-	tabs := []string{"p Principal", "s Sobre", "c Contato"}
-	renderedTabs := make([]string, len(tabs))
-
-	for i, tab := range tabs {
-		if i == m.currentView {
-			renderedTabs[i] = activeTabStyle.Render(tab)
-		} else {
-			renderedTabs[i] = inactiveTabStyle.Render(tab)
-		}
-	}
-
-	header := headerStyle.Render(lipgloss.JoinHorizontal(lipgloss.Left, renderedTabs...))
-
-	// Status bar
-
-	w := lipgloss.Width
-
-	statusKey := statusStyle.Render("RUNNING")
-	//encoding := encodingStyle.Render("UTF-8")
-	fishCake := fishCakeStyle.Render("⚡ Cris.Run")
-	statusVal := statusText.
-		//Width(m.width - w(statusKey) - w(encoding) - w(fishCake)).
-		Width(m.width - w(statusKey) - w(fishCake)).
-		Render("Pressione 'q' para sair.")
-
-	bar := statusBarStyle.Render(lipgloss.JoinHorizontal(lipgloss.Top,
-		statusKey,
-		statusVal,
-		//encoding,
-		fishCake,
-	))
-
-	//doc.WriteString(statusBarStyle.Width(width).Render(bar))
+	m.blogPage()
 
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
-		header,
+		m.headerView(),
 		m.viewports[m.currentView].View(),
-		bar,
+
+		m.footerView(),
 	)
+
 }
 
-// func main() {
-// 	p := tea.NewProgram(InitialModel(), tea.WithAltScreen())
-// 	if _, err := p.Run(); err != nil {
-// 		fmt.Printf("Erro ao executar programa: %v", err)
-// 		os.Exit(1)
-// 	}
-// }
+func (m model) navigation() tea.Model {
+
+	var homeContent = homePage()
+	var sobreContent = sobrePage()
+	var contatoContent = contatoPage()
+
+	renderer, _ := glamour.NewTermRenderer(
+		glamour.WithAutoStyle(),
+		glamour.WithWordWrap(m.width),
+	)
+
+	for i, content := range []string{homeContent, sobreContent, contatoContent} {
+
+		m.viewports[i] = viewport.New(m.width, m.viewportHeight)
+		m.viewports[i].Style = m.configTheme().defaultStyle
+
+		renderedContent, _ := renderer.Render(content)
+		m.viewports[i].SetContent(renderedContent)
+
+	}
+	return m
+}
+
+func (m model) blogPage() tea.Model {
+
+	m.viewports[3] = viewport.New(m.width, m.viewportHeight)
+	m.viewports[3].Style = m.configTheme().defaultStyle
+	m.viewports[3].SetContent(m.listView())
+
+	return m
+
+}

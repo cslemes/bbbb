@@ -2,7 +2,7 @@ runtime: go122
 
 env: standard
 
-main: ./cmd/ssh 
+main: ./
 
 instance_class: F1 
 
@@ -12,4 +12,3 @@ env_variables:
 handlers:
 - url: /.*
   script: auto
-
