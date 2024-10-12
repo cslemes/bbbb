@@ -142,17 +142,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## TODOs
 
 - [ ] Implement user authentication for admin access
+- [ ] Configure auto resize screen
 - [ ] Implement a search functionality for blog posts
 - [ ] Add support for comments on blog posts
-- [ ] Create a configuration file for easy customization of colors and styles
+- [x] Create a configuration file for easy customization of colors and styles
 - [ ] Implement pagination for the blog post list
-- [ ] Add support for image embedding in blog posts (possibly using ASCII art or terminal graphics)
-- [ ] Create a simple plugin system for extending functionality
-- [ ] Implement a basic analytics system to track post views
 - [ ] Add support for multiple authors with different permissions
 - [ ] Implement a tagging system for blog posts
 - [ ] Add a "featured posts" section on the home page
-- [ ] Frontmatter for blog posts
+- [ ] Create a frontmatter for blog posts
 - [ ] Multiples Layouts to choose
 
 
