@@ -85,7 +85,7 @@ func (m model) Init() tea.Cmd {
 
 func (m model) headerView() string {
 
-	tabs := []string{"p Principal", "s Sobre", "c Contato", "b Blog"}
+	tabs := []string{"p Principal", "a About", "c Contact", "b Blog"}
 	renderedTabs := make([]string, len(tabs))
 
 	for i, menu := range tabs {
@@ -264,7 +264,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 
 	setSplash := utils.GetTerminalColorSupport(m.sessInfo)
-	fmt.Println(setSplash)
+
 	splashContent := splashContent(setSplash)
 
 	if m.showingSplash {
