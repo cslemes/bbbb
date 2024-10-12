@@ -1,7 +1,7 @@
 
 ![](/images/bubble-blog.png)
 
-<a href="https://www.freepik.com/free-vector/gradient-candy-pastel-color-text-effect_49681775.htm">Image by pikisuperstar on Freepik</a>
+
 
 # Bubble Blog
 
@@ -136,6 +136,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - The amazing [Charm](https://charm.sh/) team for their fantastic libraries
+- <a href="https://www.freepik.com/free-vector/gradient-candy-pastel-color-text-effect_49681775.htm">Image by pikisuperstar on Freepik</a>
 
 
 ## TODOs
