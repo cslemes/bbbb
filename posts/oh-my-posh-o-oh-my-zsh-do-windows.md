@@ -1,7 +1,4 @@
----
-title: "Oh My Posh: O Oh My Zsh do Windows"
-
----
+## "Oh My Posh: O Oh My Zsh do Windows"
 
 O Oh My Zsh é uma ferramenta bem conhecida para customizar o terminal Zsh, usado em distribuições Linux e no macOS. Além de oferecer uma variedade de temas, o Oh My Zsh também possui uma ampla gama de plugins, como completions, que ajudam a aumentar a produtividade.
 

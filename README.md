@@ -73,7 +73,7 @@ Bubble Blog comes with a Dockerfile for easy containerization and deployment. He
 5. Run the container:
    ```
    docker run -p 42069:42069 bubble-blog
-
+   ```
 
 ## Configuration
 
@@ -112,7 +112,7 @@ To add a new blog post:
 
 1. Start the Bubble Blog server:
    ```
-   ./bubble-blog
+   ./bbbb
    ```
 2. Connect to the server using SSH:
    ```

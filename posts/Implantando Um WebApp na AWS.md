@@ -1,8 +1,4 @@
----
-title: Implantando um Web App
----
-
-## Introdução
+## Implantando um Web App na AWS
 
 Neste artigo, vamos explorar os conceitos básicos da AWS na prática, utilizando um cenário de instalação de um blog usando Ghost.
 Vamos utilizar uma variedade de serviços da AWS, incluindo:
