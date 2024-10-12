@@ -111,12 +111,12 @@ func (m model) footerView() string {
 	fishCake := m.configTheme().fishCakeStyle.Render("⚡ Cris.Run")
 	statusVal := m.configTheme().statusText.
 		Width(m.width - w(statusKey) - w(fishCake)).
-		Render("Pressione 'q' para sair.")
+		Render("Press 'q' to Exit.")
 
 	if m.currentView == 4 {
 		statusVal = m.configTheme().statusText.
 			Width(m.width - w(statusKey) - w(fishCake)).
-			Render("Pressione 'q' para sair. Pressione 'Esc' para sair do modo letura.")
+			Render("Press 'q' to Exit. Press 'Esc' to exit read mode.")
 
 	}
 
@@ -164,72 +164,71 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
-		case "p":
-			m.currentView = 0
-		case "a":
-			m.currentView = 1
-		case "c":
-			m.currentView = 2
-		case "b":
-			if m.blogPageOpen || !m.focusedOnList {
-				m.currentView = 4
-			} else {
+		case "esc":
+			if m.currentView == 4 {
 				m.currentView = 3
+				m.focusedOnList = true
+				m.blogPageOpen = false
 			}
-		case "right", "l":
-			m.currentView = (m.currentView + 1) % (len(m.viewports) - 1)
-
-		case "left", "h":
-			m.currentView = (m.currentView - 1 + len(m.viewports)) % len(m.viewports)
-
-		case "up", "k":
-			if m.currentView == 3 {
-				if m.focusedOnList {
-					if m.selectedItem > 0 {
+		case "up", "k", "down", "j":
+			if m.currentView == 4 {
+				m.viewports[m.currentView], cmd = m.viewports[m.currentView].Update(msg)
+			} else if m.currentView == 3 {
+				if msg.String() == "up" || msg.String() == "k" {
+					if m.focusedOnList && m.selectedItem > 0 {
 						m.selectedItem--
 					}
-				}
-			} else {
-				m.viewports[m.currentView], cmd = m.viewports[m.currentView].Update(msg)
-			}
-
-		case "down", "j":
-			if m.currentView == 3 {
-				if m.focusedOnList {
-					if m.selectedItem < len(m.listItems)-1 {
+				} else if msg.String() == "down" || msg.String() == "j" {
+					if m.focusedOnList && m.selectedItem < len(m.listItems)-1 {
 						m.selectedItem++
 					}
 				}
 			} else {
 				m.viewports[m.currentView], cmd = m.viewports[m.currentView].Update(msg)
 			}
-
-		case "enter":
-			if m.currentView == 3 {
-				if m.focusedOnList {
-					filename := m.listItems[m.selectedItem]
-					content, err := utils.ReadFileContent("posts/" + filename + ".md")
-					if err != nil {
-						m.selectedContent.SetContent("Error reading file: " + err.Error())
-					} else {
-						renderedContent, _ := glamour.Render(content, "dark")
-						m.viewports[4] = viewport.New(m.width, m.viewportHeight)
-						m.viewports[4].Style = m.configTheme().defaultStyle
-						m.viewports[4].SetContent(renderedContent)
+		default:
+			if m.currentView != 4 {
+				switch msg.String() {
+				case "p":
+					m.currentView = 0
+				case "a":
+					m.currentView = 1
+				case "c":
+					m.currentView = 2
+				case "b":
+					if m.blogPageOpen || !m.focusedOnList {
 						m.currentView = 4
-						m.focusedOnList = false
-						m.blogPageOpen = true
+					} else {
+						m.currentView = 3
+					}
+				case "right", "l":
+					m.currentView = (m.currentView + 1) % (len(m.viewports) - 1)
+				case "left", "h":
+					m.currentView = (m.currentView - 1 + len(m.viewports)) % len(m.viewports)
+					if m.currentView == 4 {
+						m.currentView = 3
+					}
+
+				case "enter":
+					if m.currentView == 3 && m.focusedOnList {
+						filename := m.listItems[m.selectedItem]
+						content, err := utils.ReadFileContent("posts/" + filename + ".md")
+						if err != nil {
+							m.selectedContent.SetContent("Error reading file: " + err.Error())
+						} else {
+							renderedContent, _ := glamour.Render(content, "dark")
+							m.viewports[4] = viewport.New(m.width, m.viewportHeight)
+							m.viewports[4].Style = m.configTheme().defaultStyle
+							m.viewports[4].SetContent(renderedContent)
+							m.currentView = 4
+							m.focusedOnList = false
+							m.blogPageOpen = true
+						}
 					}
 				}
 			}
-		case "esc":
-			m.currentView = 3
-			m.focusedOnList = true
-
-			// case "up", "down", "k", "j":
-			// 	m.viewports[m.currentView], cmd = m.viewports[m.currentView].Update(msg)
-
 		}
+
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
@@ -253,7 +252,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	}
-	//m.viewports[m.currentView], cmd = m.viewports[m.currentView].Update(msg)
 	return m, cmd
 }
 

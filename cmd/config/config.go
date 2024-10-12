@@ -38,7 +38,7 @@ func loadConfig(path string) (*Config, error) {
 }
 
 func AppConfig() *Config {
-	config, err := loadConfig("./config.yaml")
+	config, err := loadConfig("config.yaml")
 	if err != nil {
 		fmt.Printf("Error loading config: %v\n", err)
 	}

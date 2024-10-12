@@ -78,8 +78,8 @@ Bubble Blog comes with a Dockerfile for easy containerization and deployment. He
    ```
 5. Run the container:
    ```
-   docker run -p 42069:42069 bubble-blog
-   docker run -d --mount type=bind,source=$PWD,target=/ --name my_bubbleblog bubble-blog
+   docker run --mount type=bind,source=/path-of-blog/,target=/app \
+   -p 42069:42069 --rm --name my_bubbleblog bubble-blog
    ```
 
 ## Configuration

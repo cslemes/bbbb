@@ -3,9 +3,10 @@ server:
   port: 42069
 
 theme: 
-  color: special
+  color: bubble
   # subtle
 	# highlight
 	# special
+  # bubble
 navigation:
   showingSplash: true

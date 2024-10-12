@@ -6,13 +6,10 @@ COPY . .
 RUN go mod tidy
 RUN go build -o /app/bbbb main.go
 
-
 FROM scratch AS prod
 
 WORKDIR /app
-COPY --from=build /app/bbbb /app/
-
+COPY --from=build /app/bbbb /
 
 EXPOSE 42069
-CMD ["/app/bbbb"]
-
+CMD ["/bbbb"]
