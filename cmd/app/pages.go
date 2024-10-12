@@ -9,10 +9,13 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/ssh"
+	"github.com/cslemes/bbbb/cmd/config"
 	"github.com/cslemes/bbbb/cmd/utils"
 )
 
 type model struct {
+	sessInfo             ssh.Session
 	showingSplash        bool
 	currentView          int
 	viewports            []viewport.Model
@@ -49,7 +52,7 @@ type model struct {
 	statusText          lipgloss.Style
 }
 
-func InitialModel() model {
+func InitialModel(sess ssh.Session) model {
 
 	listItems, err := utils.LoadFilesFromDir("posts")
 	if err != nil {
@@ -58,7 +61,8 @@ func InitialModel() model {
 	}
 
 	return model{
-		showingSplash:   true,
+		sessInfo:        sess,
+		showingSplash:   config.AppConfig().Navigation.ShowingSplash,
 		currentView:     0,
 		viewports:       make([]viewport.Model, 5),
 		listItems:       listItems,
@@ -259,10 +263,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 
-	splashContent := splashContent()
+	setSplash := utils.GetTerminalColorSupport(m.sessInfo)
+	fmt.Println(setSplash)
+	splashContent := splashContent(setSplash)
 
 	if m.showingSplash {
-		splashText := fmt.Sprintf("%s", splashContent)
+		splashText := splashContent
 		style := m.splashStyle
 		return style.Render(lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, splashText))
 	}

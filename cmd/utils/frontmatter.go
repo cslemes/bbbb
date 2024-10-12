@@ -1,4 +1,4 @@
-package pages
+package utils
 
 import (
 	"path/filepath"

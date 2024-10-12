@@ -15,6 +15,9 @@ type Config struct {
 	Theme struct {
 		Color string `yaml:"color"`
 	}
+	Navigation struct {
+		ShowingSplash bool `yaml:"showingSplash"`
+	}
 }
 
 func loadConfig(path string) (*Config, error) {

@@ -30,8 +30,8 @@ func contatoPage() string {
 	return string(contatoContent)
 }
 
-func splashContent() string {
-	if 256 == 256 {
+func splashContent(xTerm int) string {
+	if xTerm == 256 {
 		return `
  ███████╗██████╗ ██╗███████╗     ██████╗  ██╗  ██╗ ██   ██╗
  ██╔════╝██╔══██╗██║██╔════╝     ██╔══██╗ ██║  ██║ ███╗ ██║

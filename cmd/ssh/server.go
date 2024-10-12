@@ -16,13 +16,14 @@ import (
 	"github.com/charmbracelet/wish/activeterm"
 	bm "github.com/charmbracelet/wish/bubbletea"
 	"github.com/charmbracelet/wish/logging"
-	content "github.com/cslemes/bbbb/cmd/app"
+	pages "github.com/cslemes/bbbb/cmd/app"
 	"github.com/cslemes/bbbb/cmd/config"
 )
 
 func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
-	m := content.InitialModel()
+	m := pages.InitialModel(s)
 	return m, []tea.ProgramOption{tea.WithAltScreen()}
+
 }
 
 func StartServer() {

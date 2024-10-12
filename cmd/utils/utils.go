@@ -1,13 +1,13 @@
 package utils
 
 import (
-	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/gliderlabs/ssh"
+	//"github.com/gliderlabs/ssh"
+	"github.com/charmbracelet/ssh"
 )
 
 func LoadFilesFromDir(dir string) ([]string, error) {
@@ -42,7 +42,6 @@ func ReadFileContent(path string) (string, error) {
 func GetTerminalColorSupport(s ssh.Session) int {
 	// Get the TERM environment variable from the SSH session
 	termEnv := os.Getenv("TERM")
-	fmt.Printf("Client TERM: %s\n", termEnv)
 
 	// Get terminal info using TERM and terminfo library
 	// This will give us detailed information about the terminal capabilities
@@ -58,4 +57,5 @@ func GetTerminalColorSupport(s ssh.Session) int {
 	default:
 		return 8 // Assume basic 8-color support as the fallback
 	}
+
 }
