@@ -4,17 +4,15 @@ WORKDIR /app
 COPY . .
 
 RUN go mod tidy
-RUN go build -o /source/bbbb main.go
+RUN go build -o /app/bbbb main.go
 
 
 FROM scratch AS prod
 
-WORKDIR /
-COPY --from=build /source/bbbb /
-COPY posts/ /posts
-COPY content/ /content 
-COPY config.yaml /
+WORKDIR /app
+COPY --from=build /app/bbbb /app/
 
-# COPY --from=build /source/content/ /content/
+
 EXPOSE 42069
-CMD ["/bbbb"]
+CMD ["/app/bbbb"]
+

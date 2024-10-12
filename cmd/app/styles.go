@@ -3,6 +3,7 @@ package pages
 import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/cslemes/bbbb/cmd/config"
+	"github.com/muesli/gamut"
 )
 
 // Style definitions.
@@ -39,7 +40,7 @@ func (t model) configTheme() model {
 	case "special":
 		t.color = lipgloss.AdaptiveColor{Light: "#43BF6D", Dark: "#73F59F"}
 	}
-	//blends := gamut.Blends(lipgloss.Color("#F25D94"), lipgloss.Color("#EDFF82"), 50)
+	t.blends = gamut.Blends(lipgloss.Color("#F25D94"), lipgloss.Color("#EDFF82"), 50)
 
 	t.activeSelectStyle = lipgloss.NewStyle().
 		Foreground(lipgloss.Color("#FFFFFF")).
@@ -85,7 +86,7 @@ func (t model) configTheme() model {
 		BorderRight(false)
 
 	t.splashStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#FAFAFA")).
+		Foreground(t.color).
 		//			Background(lipgloss.Color("#874BFD")).
 		// BorderStyle(lipgloss.DoubleBorder()).
 		// BorderForeground(lipgloss.Color("#FAFAFA")).

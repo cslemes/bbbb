@@ -2,6 +2,7 @@ package pages
 
 import (
 	"fmt"
+	"image/color"
 	"strings"
 	"time"
 
@@ -50,6 +51,7 @@ type model struct {
 	fishCakeStyle       lipgloss.Style
 	statusBarStyle      lipgloss.Style
 	statusText          lipgloss.Style
+	blends              []color.Color
 }
 
 func InitialModel(sess ssh.Session) model {
@@ -110,6 +112,13 @@ func (m model) footerView() string {
 	statusVal := m.configTheme().statusText.
 		Width(m.width - w(statusKey) - w(fishCake)).
 		Render("Pressione 'q' para sair.")
+
+	if m.currentView == 4 {
+		statusVal = m.configTheme().statusText.
+			Width(m.width - w(statusKey) - w(fishCake)).
+			Render("Pressione 'q' para sair. Pressione 'Esc' para sair do modo letura.")
+
+	}
 
 	return m.statusBarStyle.Render(lipgloss.JoinHorizontal(lipgloss.Top,
 		statusKey,
@@ -236,19 +245,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.viewport = viewport.New(msg.Width, msg.Height-m.verticalMarginHeight)
 			m.viewport.YPosition = headerHeight
 			m.viewport.SetContent(m.navigation().View())
-
-			// 	// 	for i, content := range []string{homeContent, sobreContent, contatoContent} {
-
-			// 	// 		m.viewports[i] = viewport.New(m.width, viewportHeight)
-			// 	// 		m.viewports[i].Style = defaultStyle
-
-			// 	// 		renderedContent, _ := glamour.Render(content, "dark")
-			// 	// 		m.viewports[i].SetContent(renderedContent)
-
-			// 	// 	}
-			// 	// 	m.viewports[3] = viewport.New(m.width, viewportHeight)
-			// 	// 	m.viewports[3].Style = defaultStyle
-			// 	// 	m.viewports[3].SetContent(m.listView())
 
 			m.ready = true
 		} else {

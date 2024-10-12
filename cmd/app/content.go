@@ -4,7 +4,7 @@ import (
 	"os"
 )
 
-// TODO Put files on object storages for dynamic update
+// TODO: Put files on object storages for dynamic update
 
 func homePage() string {
 	homeContent, err := os.ReadFile("content/home.md")
@@ -31,17 +31,21 @@ func contatoPage() string {
 }
 
 func splashContent(xTerm int) string {
+
+	splashHD, err := os.ReadFile("content/splash.txt")
+	if err != nil {
+		panic(err)
+	}
+
+	splashLow, err := os.ReadFile("content/splashlow.txt")
+	if err != nil {
+		panic(err)
+	}
 	if xTerm == 256 {
-		return `
- ███████╗██████╗ ██╗███████╗     ██████╗  ██╗  ██╗ ██   ██╗
- ██╔════╝██╔══██╗██║██╔════╝     ██╔══██╗ ██║  ██║ ███╗ ██║
- ██║     ██████╔╝██║███████╗     ██████╔╝ ██║  ██║ ██╔████║
- ██║     ██╔══██╗██║╚════██║     ██╔══██╗ ██║  ██║ ██║ ███║
- ███████╗██║  ██║██║███████║ ██╗ ██║  ██║ ███████║ ██║  ██║
- ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝ ╚═╝ ╚═╝  ╚═╝ ╚══════╝ ╚═╝  ╚═╝
-`
+		return string(splashHD)
+
 	} else {
-		return "Cris Run"
+		return string(splashLow)
 	}
 
 }
