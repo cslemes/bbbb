@@ -44,7 +44,7 @@ This will connect you to a public instance of Bubble Blog, allowing you to explo
 1. Ensure you have Go installed on your system.
 2. Clone this repository:
    ```
-   git clone https://github.com/yourusername/bubble-blog.git
+   git clone https://github.com/cslemes/bubble-blog.git
    ```
 3. Navigate to the project directory:
    ```
