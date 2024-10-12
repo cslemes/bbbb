@@ -157,7 +157,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "p":
 			m.currentView = 0
-		case "s":
+		case "a":
 			m.currentView = 1
 		case "c":
 			m.currentView = 2

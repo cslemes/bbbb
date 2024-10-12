@@ -7,6 +7,8 @@
 
 Bubble Blog is a delightful terminal-based blog application built with Go, leveraging the power of Charm libraries to create an interactive and visually appealing user interface right in your terminal.
 
+![](/images/homescreen.png)
+
 ## Features
 
 - 🖥️ Terminal-based UI: Enjoy a sleek, responsive interface in your favorite terminal
