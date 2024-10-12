@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: sshblog
-  name: sshblog
+    app: bubbleblog
+  name: bubbleblog
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sshblog
+      app: bubbleblog
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: sshblog
+        app: bubbleblog
     spec:
       containers:
-      - image: sshblog
-        name: sshblog
+      - image: bubble-blog
+        name: bubbleblog
         imagePullPolicy: Never
         ports:
         - containerPort: 42069
@@ -25,10 +25,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sshblog-service
+  name: bubbleblog-service
 spec:
   selector:
-    app: sshblog
+    app: bubbleblog
   ports:
     - protocol: TCP
       port: 443
