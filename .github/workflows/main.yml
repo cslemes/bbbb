@@ -1,33 +1,49 @@
-name: Deploy to Google App Engine
+name: Deploy Go App to GCP VM using Docker
 
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout código
-      uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Configurar Go
-      uses: actions/setup-go@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to GCR
+      uses: docker/login-action@v2
       with:
-        go-version: '1.22' 
+        registry: gcr.io
+        username: _json_key
+        password: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Autenticar no Google Cloud
-      uses: google-github-actions/auth@v1
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-    - name: Configurar Google Cloud SDK
-      uses: google-github-actions/setup-gcloud@v1
-
-    - name: Deploy para App Engine
-      run: |
-        gcloud app deploy app.yaml --quiet
+    - name: Build and Push Docker Image
       env:
-        PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
+      run: |
+        docker build -t $DOCKER_IMAGE .
+        docker push $DOCKER_IMAGE
+
+    - name: Deploy to GCP VM
+      env:
+        GCP_VM_IP: ${{ secrets.GCP_VM_IP }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      run: |
+        # Set up SSH
+        echo "$SSH_PRIVATE_KEY" > id_rsa
+        chmod 600 id_rsa
+        
+        # SSH into the VM and run the Docker container
+        ssh -i id_rsa -o StrictHostKeyChecking=no user@${GCP_VM_IP} << 'EOF'
+          # Pull the Docker image and run it
+          docker pull gcr.io/YOUR_PROJECT_ID/YOUR_APP_NAME
+          docker stop YOUR_APP_NAME || true
+          docker rm YOUR_APP_NAME || true
+          docker run -d --name YOUR_APP_NAME gcr.io/YOUR_PROJECT_ID/YOUR_APP_NAME
+        EOF
