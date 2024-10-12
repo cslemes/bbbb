@@ -19,7 +19,6 @@ Bubble Blog is a delightful terminal-based blog application built with Go, lever
 - ⚙️ Configurable: Easily customize your blog's behavior and appearance through a YAML configuration file
 - 🐳 Docker Support: Quickly deploy your blog using Docker
 
-
 ## Try It Out!
 
 You can experience Bubble Blog right now without any installation! A live instance is running and accessible via SSH:
