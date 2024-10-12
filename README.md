@@ -1,3 +1,8 @@
+
+![](/images/bubble-blog.png)
+
+<a href="https://www.freepik.com/free-vector/gradient-candy-pastel-color-text-effect_49681775.htm">Image by pikisuperstar on Freepik</a>
+
 # Bubble Blog
 
 Bubble Blog is a delightful terminal-based blog application built with Go, leveraging the power of Charm libraries to create an interactive and visually appealing user interface right in your terminal.
