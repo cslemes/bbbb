@@ -55,6 +55,13 @@ type model struct {
 }
 
 func InitialModel(sess ssh.Session) model {
+	// pty, _, _ := sess.Pty()
+	// renderer := bm.MakeRenderer(sess)
+
+	// bg := "light"
+	// if renderer.HasDarkBackground() {
+	// 	bg = "dark"
+	// }
 
 	listItems, err := utils.LoadFilesFromDir("posts")
 	if err != nil {

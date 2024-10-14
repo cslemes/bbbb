@@ -10,6 +10,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/log"
 	"github.com/charmbracelet/ssh"
 	"github.com/charmbracelet/wish"
@@ -18,29 +19,38 @@ import (
 	"github.com/charmbracelet/wish/logging"
 	pages "github.com/cslemes/bbbb/cmd/app"
 	"github.com/cslemes/bbbb/cmd/config"
+	"github.com/muesli/termenv"
 )
 
-func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
-	m := pages.InitialModel(s)
-	return m, []tea.ProgramOption{tea.WithAltScreen()}
+func teaHandler(sess ssh.Session) (tea.Model, []tea.ProgramOption) {
+	m := pages.InitialModel(sess)
+
+	return m, []tea.ProgramOption{
+
+		tea.WithInput(sess),
+		tea.WithOutput(sess),
+		tea.WithAltScreen(),
+	}
 
 }
 
 func StartServer() {
-	Config := config.AppConfig()
 
+	Config := config.AppConfig()
 	host := Config.Server.Host
 	port := Config.Server.Port
-
-	s, err := wish.NewServer(
+	lipgloss.SetColorProfile(termenv.ANSI256)
+	server, err := wish.NewServer(
 		wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
 		wish.WithHostKeyPath(".ssh/term_info_ed25519"),
 		wish.WithMiddleware(
 			bm.Middleware(teaHandler),
+			//bm.Middleware(teaHandler),
 			activeterm.Middleware(),
 			logging.Middleware(),
 		),
 	)
+
 	if err != nil {
 		log.Error("could not start server", "error", err)
 	}
@@ -50,7 +60,7 @@ func StartServer() {
 
 	log.Info("Starting SSH server", "host", host, "port", port)
 	go func() {
-		if err = s.ListenAndServe(); err != nil && !errors.Is(err, ssh.ErrServerClosed) {
+		if err = server.ListenAndServe(); err != nil && !errors.Is(err, ssh.ErrServerClosed) {
 			log.Error("could not start server", "error", err)
 			done <- nil
 		}
@@ -61,7 +71,7 @@ func StartServer() {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	if err := s.Shutdown(ctx); err != nil && !errors.Is(err, ssh.ErrServerClosed) {
+	if err := server.Shutdown(ctx); err != nil && !errors.Is(err, ssh.ErrServerClosed) {
 		log.Error("could not stop server", "error", err)
 	}
 }
