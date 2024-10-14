@@ -24,7 +24,7 @@ Bubble Blog is a delightful terminal-based blog application built with Go, lever
 You can experience Bubble Blog right now without any installation! A live instance is running and accessible via SSH:
 
 ```
-ssh cris.run
+ssh term.cris.run
 ```
 
 This will connect you to a public instance of Bubble Blog, allowing you to explore its features and interface immediately. Feel free to browse through the blog posts and navigate the terminal UI to get a feel for how Bubble Blog works.
