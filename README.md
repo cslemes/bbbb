@@ -142,7 +142,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## TODOs
 
-- [ ] Implement user authentication for admin access
+- [ ] Create more layouts for menu
 - [ ] Configure auto resize screen
 - [ ] Implement a search functionality for blog posts
 - [ ] Add support for comments on blog posts
