@@ -1,36 +1,38 @@
-# Cristiano Lemes
+# About Me
 
-## Especialista em Infraestrutura, SRE e Devops
+Hi! I'm **Jane Doe**, a passionate **Full-Stack Developer** with a love for building dynamic and user-friendly web applications. With over 5 years of experience in software development, I specialize in creating solutions that combine beautiful design with clean, efficient code.
 
-### Resumo
+---
 
-Sou orientado para resultados e com habilidades técnicas e de liderança que me tornam um ativo valioso para a equipe. 
-Em todas as empresas que trabalhei minhas contribuições foram significativas para a melhoria da infraestrutura de TI, a redução de custos, a migração para ambientes de nuvem e a manutenção da disponibilidade dos sistemas.
-Tenho capacidade comprovada de gerenciar projetos, liderar equipes e implementar novas soluções que resolvam as necessidades do negócio.
-Tenho buscado trabalho que tenha um impacto maior na sociedade, e procuro empresas que o ambiente e a cultura combinem com a minha visão de mundo.
+## 💻 Skills
 
-### Experiência Profissional
+I have experience in a wide range of technologies and tools, including:
 
-#### Coordenador de Infraestrutura TI - Costazul Supermercados (03/2015 - 12/2022)
-- Liderou a Infraestrutura on Premises para Cloud OCI
-- Implementou CI/CD, melhorando o tempo de deploy em 50%
+- **Frontend**: HTML, CSS, JavaScript (React, Vue), Tailwind CSS, Svelte
+- **Backend**: Node.js, Golang, Python, Ruby on Rails
+- **Databases**: PostgreSQL, MongoDB, MySQL
+- **DevOps**: Docker, Kubernetes, Jenkins, CI/CD pipelines
+- **Cloud**: AWS, Google Cloud, Azure
+- **Version Control**: Git, GitHub, GitLab
 
-#### Analista de Infraestrutura Senior - Prezunic Cencosud (01/2013-08/2014)
-- Administração de Servidores Linux e Windows
-- Coordenou a desativação do ambiente de infraestrutura legado do Prezunic para Data centers Regionais Cencosud resultando na redução de R$ 1M de custos para empresa
+---
 
-### Habilidades Técnicas
+## 🌱 Currently Learning
 
-- **Linguagens**: Go, Python, SQL
-- **Clouds**: OCI, GCP, AWS
-- **Ferramentas**: Docker, Kubernetes, Git, GiLab, Terraform
+I’m always eager to learn and stay up-to-date with the latest technologies. Right now, I'm diving deeper into:
 
-### Educação
+- **Rust** for systems programming
+- **Machine Learning** using TensorFlow and PyTorch
+- **Blockchain Development** on Ethereum and Solana
 
-- Tecnólogo em Design Gráfico, Graphic Design, 2010
+---
 
-### Certificações
+## 🛠️ Projects
 
-- Google Cloud Engineer Associate 2024
-- Oracle Cloud Infraestructure Associate 2023
-- Github Foundation 2024
+Here are a few of the projects I’ve worked on recently:
+
+- **[Project 1](https://github.com/example)** – A full-stack e-commerce platform built with React, Node.js, and PostgreSQL.
+- **[Project 2](https://github.com/example)** – A personal task management app using Golang and Vue.js.
+- **[Project 3](https://github.com/example)** – A machine learning-based recommendation engine using Python and TensorFlow.
+
+---
