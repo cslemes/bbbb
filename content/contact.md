@@ -1,34 +1,14 @@
-# Contact Us
+# Entre em Contato
 
-We'd love to hear from you! If you have any questions, comments, or concerns, feel free to reach out to us through any of the methods below.
+Estou sempre aberto a novas oportunidades e colaborações. Sinta-se à vontade para entrar em contato comigo através dos seguintes meios:
 
----
+## Informações de Contato
 
-## 📧 Email Us
-You can email us directly at:
-- **General Inquiries**: [info@example.com](info@example.com)
-- **Support**: [support@example.com](support@example.com)
-- **Sales**: [sales@example.com](sales@example.com)
+- **Email**: [cristiano@lemes.tech](mailto:cristiano@lemes.tech)
+- **LinkedIn**: [linkedin.com/in/cslemes](https://www.linkedin.com/in/cslemes)
+- **GitHub**: [github.com/cslemes](https://github.com/cslemes)
+- **Blog**: [cristiano.lemes.tech](https://cristiano.lemes.tech)
 
----
+## Redes Sociais
 
-## ☎️ Call Us
-Our phone lines are open Monday to Friday, from 9:00 AM to 6:00 PM.
-
-- **Customer Support**: +1 (555) 123-4567
-- **Sales Inquiries**: +1 (555) 987-6543
-
----
-
-## 📍 Visit Us
-
-Our office is located at:
-
-**Example Company**  
-123 Main St, Suite 400  
-City, State 12345  
-BRAZIL 
-
----
-
-We look forward to connecting with you!
+- **Dev.to**: [dev.to/cslemes](https://dev.to/cslemes)

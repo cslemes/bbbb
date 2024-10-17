@@ -1,12 +1,12 @@
-# Welcome to My Portfolio!
+# Bem-vindo ao Meu Portfólio!
 
-## Who am I?
+## Sobre Mim
 
-Hello! I am a specialist in Infrastructure, SRE, and DevOps, passionate about creating innovative solutions.  
-This TUI (Text User Interface) portfolio is an example of my work with Go and terminal interfaces.
+Olá! Sou um especialista em Infraestrutura, SRE, DevOps e apaixonado por criar soluções inovadoras. 
+Este portfólio TUI (Text User Interface) é um exemplo do meu trabalho com Go e interfaces de terminal.
 
-## Highlights
+## Destaques
 
-- 🚀 Experience in Infrastructure, SRE, DevOps, and Cloud
-- 💡 Continuous learning and adaptation to new technologies
-- 🤝 Effective collaboration in multidisciplinary teams
+- 🚀 Experiência em Infraestrutura, SRE, Devops e Cloud
+- 💡 Aprendizado contínuo e adaptação a novas tecnologias
+- 🤝 Colaboração efetiva em equipes multidisciplinares
