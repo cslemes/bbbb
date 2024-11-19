@@ -5,8 +5,8 @@ server:
 theme: 
   color: bubble
   # subtle
-	# highlight
-	# special
+  # highlight
+  # special
   # bubble
 navigation:
   showingSplash: true

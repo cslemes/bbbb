@@ -3,15 +3,8 @@ FROM golang:1.23.1-alpine3.20 AS build
 WORKDIR /app
 COPY . .
 
-RUN go mod download
-
-RUN CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -o /app/bbbb -a -ldflags="-s -w" -installsuffix cgo
-
-ARG upx_version=4.2.4
-
-RUN apk add --no-cache curl upx
-
-RUN upx --ultra-brute -qq bbbb && upx -t bbbb
+RUN go mod tidy
+RUN go build -o /app/bbbb main.go
 
 FROM scratch AS prod
 

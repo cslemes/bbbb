@@ -2,9 +2,8 @@ package config
 
 import (
 	"fmt"
-	"os"
 
-	"gopkg.in/yaml.v3"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -21,24 +20,26 @@ type Config struct {
 }
 
 func loadConfig(path string) (*Config, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
+
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(path)
+
+	// Read the configuration file
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, fmt.Errorf("error reading config file: %w", err)
 	}
-	defer file.Close()
 
 	var config Config
-	decoder := yaml.NewDecoder(file)
-	err = decoder.Decode(&config)
-	if err != nil {
-		return nil, err
+	if err := viper.Unmarshal(&config); err != nil {
+		return nil, fmt.Errorf("unable to decode into struct: %w", err)
 	}
 
 	return &config, nil
 }
 
 func AppConfig() *Config {
-	config, err := loadConfig("config.yaml")
+	config, err := loadConfig(".")
 	if err != nil {
 		fmt.Printf("Error loading config: %v\n", err)
 	}
